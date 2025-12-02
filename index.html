@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Qtum Snap Installer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="card">
+      <!-- Left: Installer content -->
+      <section>
+        <div>
+          <div class="badge">Qtum · MetaMask Snap</div>
+          <div class="icon">
+            <img src="images/svgs/icon.svg" alt="Qtum Snap logo" />
+          </div>
+          <h1>Qtum Snap Installer</h1>
+          <p class="notice">
+            Until Qtum Snap is listed in the official MetaMask Snaps directory,
+            you’ll get the best experience using
+            <a
+              href="https://metamask.io/flask/"
+              target="_blank"
+              rel="noreferrer"
+            >
+              MetaMask&nbsp;Flask
+            </a>
+            (the developer build with full Snaps support).
+          </p>
+        </div>
+
+        <div class="buttons">
+          <button id="install" class="btn-primary">
+            Install Qtum Snap
+          </button>
+          <button id="uninstall" class="btn-secondary">
+            Uninstall
+          </button>
+        </div>
+
+        <div class="status">
+          <div id="env" class="status-line-strong">
+            Checking wallet environment…
+          </div>
+          <div id="snap-status" class="status-line-muted">
+            Qtum Snap is not installed yet on this wallet.
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Screenshots carousel -->
+      <section class="screenshots-card">
+        <div class="carousel">
+          <button
+            type="button"
+            class="carousel-arrow"
+            id="carousel-prev"
+            aria-label="Previous screenshot"
+          >
+            ‹
+          </button>
+
+          <div class="carousel-viewport">
+            <img
+              id="carousel-image"
+              src="images/pngs/home.png"
+              alt="Qtum Snap screenshot"
+            />
+          </div>
+
+          <button
+            type="button"
+            class="carousel-arrow"
+            id="carousel-next"
+            aria-label="Next screenshot"
+          >
+            ›
+          </button>
+        </div>
+
+        <div class="carousel-caption" id="carousel-caption">
+          Home · Wallet overview
+        </div>
+
+        <div class="carousel-dots" id="carousel-dots">
+          <!-- Dots will be injected by scripts.js -->
+        </div>
+      </section>
+    </main>
+
+    <section class="footer">
+      <span>
+        Powered by Qtum · Built by
+        <a
+          href="https://github.com/meherett"
+          target="_blank"
+          rel="noreferrer"
+        >
+          Meheret
+        </a>
+      </span>
+    </section>
+
+    <script src="scripts.js"></script>
+  </body>
+</html>

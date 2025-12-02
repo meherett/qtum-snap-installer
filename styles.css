@@ -1,0 +1,319 @@
+:root {
+  color-scheme: dark;
+
+  /* Qtum blue palette */
+  --qtum-blue: #0645f7;
+  --qtum-blue-light: #3b7bff;
+  --qtum-blue-softer: #a9c4ff;
+  --qtum-blue-bg-soft: rgba(6, 69, 247, 0.18);
+  --qtum-blue-border-soft: rgba(6, 69, 247, 0.55);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+  background:
+    radial-gradient(circle at top, rgba(6, 69, 247, 0.28) 0, #020617 40%, #000 100%);
+  color: #f9fafb;
+}
+
+/* Main two-column card (text left, screenshots right) */
+.card {
+  width: 100%;
+  max-width: 850px;
+  min-height: 485px;
+  background: rgba(9, 15, 30, 0.96);
+  border-radius: 24px;
+  padding: 30px 26px 22px;
+  box-shadow: 0 32px 90px rgba(0, 0, 0, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+  display: flex;
+  gap: 24px;
+}
+
+/* Left section (installer text) grows, right (screenshots) is fixed */
+.card > section:first-child {
+  flex: 1 1 0;
+}
+
+/* Badge + header */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--qtum-blue-softer);
+  background: rgba(6, 69, 247, 0.2);
+  border-radius: 999px;
+  padding: 6px 13px;
+}
+
+.icon {
+  margin-top: 20px;
+}
+
+.icon img {
+  width: 100px;
+  height: auto;
+}
+
+h1 {
+  font-size: 28px;
+  margin: 12px 0;
+}
+
+p {
+  margin: 0;
+}
+
+/* Notice / Flask hint */
+
+.notice {
+  margin-top: 6px;
+  padding: 12px 14px;
+  font-size: 14px;
+  border-radius: 12px;
+  background: var(--qtum-blue-bg-soft);
+  border: 1px solid var(--qtum-blue-border-soft);
+}
+
+.notice a {
+  color: var(--qtum-blue-softer);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Buttons row */
+
+.buttons {
+  margin: 18px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+button {
+  border: none;
+  border-radius: 999px;
+  padding: 13px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: transform 0.05s ease, box-shadow 0.05s ease,
+    background 0.15s ease, opacity 0.15s ease, border-color 0.15s ease;
+}
+
+button:disabled {
+  opacity: 0.9;              /* less “faded” */
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Normal primary button */
+.btn-primary {
+  background: linear-gradient(135deg, var(--qtum-blue), var(--qtum-blue-light));
+  color: white;
+  box-shadow: 0 18px 52px rgba(6, 69, 247, 0.55);
+}
+
+/* Hover only when enabled */
+.btn-primary:not(:disabled):hover {
+  transform: translateY(-1px);
+  box-shadow: 0 22px 64px rgba(6, 69, 247, 0.7);
+}
+
+/* Disabled primary: gray gradient */
+.btn-primary:disabled {
+  background: linear-gradient(135deg, #4b5563, #111827); /* slate -> near-black */
+  color: #e5e7eb;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #e5e7eb;
+  border: 1px solid rgba(148, 163, 184, 0.75);
+}
+
+.btn-secondary:not(:disabled):hover {
+  border-color: rgba(169, 196, 255, 0.95);
+  background: rgba(6, 69, 247, 0.06);
+}
+
+/* Status text */
+
+.status {
+  font-size: 14px;
+  color: #d1d5db;
+}
+
+.status-line-strong {
+  font-weight: 700;
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.status-line-muted {
+  font-size: 15px;
+  color: #9ca3af;
+}
+
+/* Footer */
+
+.footer {
+  max-width: 850px;
+  margin-top: 25px;
+  font-size: 13px;
+  color: #6b7280;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.footer a {
+  color: var(--qtum-blue-softer);
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+/* =========================
+   Screenshots card + carousel
+   ========================= */
+
+.screenshots-card {
+  flex: 0 0 320px;
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+
+/* Row: prev button – image – next button */
+.carousel {
+  margin-top: 6px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 8px;
+}
+
+.carousel-viewport {
+  border-radius: 18px;
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(148, 163, 184, 0.35);
+}
+
+/* Phone screenshot */
+#carousel-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.carousel-arrow {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  font-size: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.carousel-arrow:hover {
+  border-color: rgba(169, 196, 255, 0.95);
+  background: rgba(6, 69, 247, 0.12);
+}
+
+.carousel-caption {
+  margin-top: 12px;
+  font-size: 12px;
+  color: #e5e7eb;
+  text-align: center;
+}
+
+.carousel-dots {
+  margin-top: 12px;
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.carousel-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: none;
+  padding: 0;
+  background: rgba(148, 163, 184, 0.7);
+  cursor: pointer;
+  transition: transform 0.08s ease, background 0.12s ease;
+}
+
+.carousel-dot.active {
+  width: 18px;
+  background: #0645f7; /* Qtum blue */
+  transform: scale(1.05);
+}
+
+/* =========================
+   Mobile layout
+   ========================= */
+
+@media (max-width: 768px) {
+  .card {
+    flex-direction: column;
+    padding: 24px 18px 18px;
+  }
+
+  /* Screenshot card below main content, full width */
+  .screenshots-card {
+    flex: none;
+    max-width: 100%;
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  .buttons {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  button {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .footer {
+    text-align: center;
+  }
+}
