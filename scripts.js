@@ -145,7 +145,7 @@ const screenshots = [
   },
   {
     src: 'images/pngs/receive.png',
-    caption: 'Receive · QR code with Qtum & hex addresses',
+    caption: 'Receive · QR code with Qtum & Hexadecimal addresses',
   },
   {
     src: 'images/pngs/add-qrc20.png',
