@@ -3,8 +3,8 @@
 // =============================
 
 // If you published as scoped.
-// const snapID = 'npm:qtum-snap';
-const snapID = 'local:http://localhost:8081';
+const snapID = 'npm:qtum-snap';
+// const snapID = 'local:http://localhost:8081';
 
 // Optional: pin to a version, e.g. '1.0.0-beta.1' package.
 // Leave as undefined to always install the latest version.
