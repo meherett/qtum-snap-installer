@@ -3,8 +3,8 @@
 // =============================
 
 // If you published as scoped.
-const snapID = 'npm:qtum-snap';
-// const snapID = 'local:http://localhost:8081';
+// const snapID = 'npm:qtum-snap';
+const snapID = 'local:http://localhost:8081';
 
 // Optional: pin to a version, e.g. '1.0.0-beta.1' package.
 // Leave as undefined to always install the latest version.
@@ -100,7 +100,7 @@ function setInstalledState(installedVersion, latestVersion) {
         `You are on the latest <strong>${targetVersion}</strong> package.`;
     } else {
       // Installed but not the target version
-      buttonLabel = `Upgrade Qtum Snap to ${targetVersion}`;
+      buttonLabel = `Update Qtum Snap to ${targetVersion}`;
       installButton.disabled = false;
 
       statusHtml =
@@ -190,7 +190,7 @@ async function detectEnvironmentAndSnap() {
 }
 
 // =============================
-// Install / Upgrade handler
+// Install / Update handler
 // =============================
 
 async function installSnap() {
@@ -236,7 +236,7 @@ async function installSnap() {
       } else if (existingSnap && versionToRequest) {
         // PROD (npm): compare installed vs target version
         if (existingSnap.version !== versionToRequest) {
-          label = 'Upgrading Qtum Snap…';
+          label = 'Updating Qtum Snap…';
         } else {
           label = 'Re-installing Qtum Snap…';
         }
