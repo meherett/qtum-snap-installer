@@ -100,7 +100,7 @@ function setInstalledState(installedVersion, latestVersion) {
         installButton.disabled = true;
       }
 
-      const versionLabel = isAdvanced ? 'Specific Version' : `latest <strong>${targetVersion}</strong>`;
+      const versionLabel = isAdvanced ? '<strong>Specific Version</strong>' : `latest <strong>${targetVersion}</strong>`;
       statusHtml =
         'Qtum Snap is installed on this wallet. ' +
         `You are on the ${versionLabel} package.`;
@@ -109,7 +109,7 @@ function setInstalledState(installedVersion, latestVersion) {
       buttonLabel = `Update Qtum Snap to ${targetVersion}`;
       installButton.disabled = false;
 
-      const versionLabel = isAdvanced ? 'Specific Version' : `latest <strong>${targetVersion}</strong>`;
+      const versionLabel = isAdvanced ? '<strong>Specific Version</strong>' : `latest <strong>${targetVersion}</strong>`;
       statusHtml =
         'Qtum Snap is installed on this wallet. ' +
         `This page will upgrade you from <strong>${installedVersion}</strong> to the ${versionLabel} package.`;
@@ -156,7 +156,7 @@ function setNotInstalledState(latestVersion) {
   }
 
   if (targetVersion) {
-    const versionLabel = isAdvanced ? 'specific version' : `latest <strong>${targetVersion}</strong>`;
+    const versionLabel = isAdvanced ? '<strong>Specific Version</strong>' : `latest <strong>${targetVersion}</strong>`;
     snapStatusElement.innerHTML = `Qtum Snap is not installed yet on this wallet. This page will install the ${versionLabel} package.`;
   } else {
     snapStatusElement.innerHTML = 'Qtum Snap is not installed yet on this wallet.';
