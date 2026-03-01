@@ -166,19 +166,24 @@ function setNotInstalledState(latestVersion) {
 async function detectEnvironmentAndSnap() {
   if (!envElement || !installButton || !uninstallButton) return;
 
+  const switchWrapper = document.querySelector('.switch-wrapper');
+
   if (!window.ethereum) {
     envElement.textContent =
       'No Ethereum provider detected. Install MetaMask and open this page in that browser profile.';
     installButton.disabled = true;
     uninstallButton.disabled = true;
-    if (advancedOptionsToggle) {
+
+    if (advancedOptionsToggle && !isDevEnvironment) {
       advancedOptionsToggle.disabled = true;
+      if (switchWrapper) switchWrapper.setAttribute('disabled', '');
     }
     return;
   }
 
   if (advancedOptionsToggle) {
     advancedOptionsToggle.disabled = false;
+    if (switchWrapper) switchWrapper.removeAttribute('disabled');
   }
 
   try {
@@ -207,6 +212,7 @@ async function detectEnvironmentAndSnap() {
     uninstallButton.disabled = true;
     if (advancedOptionsToggle) {
       advancedOptionsToggle.disabled = true;
+      if (switchWrapper) switchWrapper.setAttribute('disabled', '');
     }
   }
 }
@@ -415,19 +421,6 @@ function init() {
 
   // Advanced options
   if (advancedOptionsToggle && advancedOptionsContent) {
-    const switchWrapper = document.querySelector('.switch-wrapper');
-    if (switchWrapper) {
-      switchWrapper.addEventListener('click', (e) => {
-        // Only toggle if the click was directly on the wrapper background, 
-        // avoiding double-toggles from labels/inputs that handle it by default.
-        if (e.target.tagName !== 'INPUT' && !e.target.closest('label')) {
-          advancedOptionsToggle.checked = !advancedOptionsToggle.checked;
-          // Trigger change event manually
-          advancedOptionsToggle.dispatchEvent(new Event('change'));
-        }
-      });
-    }
-
     // Initial sync
     if (advancedOptionsToggle.checked) {
       advancedOptionsContent.classList.add('expanded');

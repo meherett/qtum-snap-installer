@@ -190,6 +190,13 @@ button:disabled {
   cursor: pointer;
 }
 
+.switch-wrapper[disabled],
+.switch-wrapper[disabled] .switch-label,
+.switch-wrapper[disabled] .slider {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
 .switch-label {
   font-size: 14px;
   font-weight: 600;
