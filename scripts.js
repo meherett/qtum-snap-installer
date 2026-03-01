@@ -100,7 +100,7 @@ function setInstalledState(installedVersion, latestVersion) {
         installButton.disabled = true;
       }
 
-      const versionLabel = isAdvanced ? '<strong>Specific Version</strong>' : `latest <strong>${targetVersion}</strong>`;
+      const versionLabel = isAdvanced ? `<strong>Specific Version</strong>` : `latest <strong>${targetVersion}</strong>`;
       statusHtml =
         'Qtum Snap is installed on this wallet. ' +
         `You are on the ${versionLabel} package.`;
@@ -109,7 +109,7 @@ function setInstalledState(installedVersion, latestVersion) {
       buttonLabel = `Update Qtum Snap to ${targetVersion}`;
       installButton.disabled = false;
 
-      const versionLabel = isAdvanced ? '<strong>Specific Version</strong>' : `latest <strong>${targetVersion}</strong>`;
+      const versionLabel = isAdvanced ? `<strong>Specific Version</strong>` : `latest <strong>${targetVersion}</strong>`;
       statusHtml =
         'Qtum Snap is installed on this wallet. ' +
         `This page will upgrade you from <strong>${installedVersion}</strong> to the ${versionLabel} package.`;
@@ -156,7 +156,7 @@ function setNotInstalledState(latestVersion) {
   }
 
   if (targetVersion) {
-    const versionLabel = isAdvanced ? '<strong>Specific Version</strong>' : `latest <strong>${targetVersion}</strong>`;
+    const versionLabel = isAdvanced ? `<strong>Specific Version</strong>` : `latest <strong>${targetVersion}</strong>`;
     snapStatusElement.innerHTML = `Qtum Snap is not installed yet on this wallet. This page will install the ${versionLabel} package.`;
   } else {
     snapStatusElement.innerHTML = 'Qtum Snap is not installed yet on this wallet.';
@@ -171,7 +171,14 @@ async function detectEnvironmentAndSnap() {
       'No Ethereum provider detected. Install MetaMask and open this page in that browser profile.';
     installButton.disabled = true;
     uninstallButton.disabled = true;
+    if (advancedOptionsToggle) {
+      advancedOptionsToggle.disabled = true;
+    }
     return;
+  }
+
+  if (advancedOptionsToggle) {
+    advancedOptionsToggle.disabled = false;
   }
 
   try {
@@ -198,6 +205,9 @@ async function detectEnvironmentAndSnap() {
       'This MetaMask does not support Snaps yet. Please use latest MetaMask.';
     installButton.disabled = true;
     uninstallButton.disabled = true;
+    if (advancedOptionsToggle) {
+      advancedOptionsToggle.disabled = true;
+    }
   }
 }
 
@@ -480,6 +490,9 @@ function init() {
     setScreenshot(0);
     startAutoRotate(); // <-- kick off auto-rotate
   }
+
+  // Periodically check for snap status changes to provide a live update feel
+  setInterval(detectEnvironmentAndSnap, 5000);
 }
 
 window.addEventListener('load', init);
