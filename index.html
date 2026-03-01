@@ -15,7 +15,16 @@
           <div class="icon">
             <img src="images/svgs/icon.svg" alt="Qtum Snap logo" />
           </div>
-          <h1>Qtum Snap Installer</h1>
+          <div class="header-row">
+            <h1>Qtum Snap Installer</h1>
+            <div class="switch-wrapper">
+              <label for="advanced-options-toggle" class="switch-label">Advanced</label>
+              <label class="switch">
+                <input type="checkbox" id="advanced-options-toggle">
+                <span class="slider"></span>
+              </label>
+            </div>
+          </div>
           <p class="notice">
             Until Qtum Snap is listed in the official MetaMask Snaps directory,
             you’ll get the best experience using
@@ -31,6 +40,16 @@
           <button id="uninstall" class="btn-secondary">
             Uninstall
           </button>
+        </div>
+
+        <div class="advanced-options" id="advanced-options">
+          <div id="advanced-options-content" class="advanced-options-content">
+            <label for="version">Specific version</label>
+            <input type="text" id="version" placeholder="e.g., 1.0.0">
+            <p class="notice warning-notice">
+              <strong>Note:</strong> You cannot downgrade the Qtum Snap if it's already installed. To install an older version, please export your private keys, uninstall the Snap, and then install the desired version.
+            </p>
+          </div>
         </div>
 
         <div class="status">

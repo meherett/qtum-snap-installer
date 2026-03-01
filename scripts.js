@@ -21,6 +21,9 @@ const installButton = document.getElementById('install');
 const uninstallButton = document.getElementById('uninstall');
 const envElement = document.getElementById('env');
 const snapStatusElement = document.getElementById('snap-status');
+const advancedOptionsToggle = document.getElementById('advanced-options-toggle');
+const advancedOptionsContent = document.getElementById('advanced-options-content');
+const versionInput = document.getElementById('version');
 
 // Carousel DOM
 const carouselImage = document.getElementById('carousel-image');
@@ -77,7 +80,9 @@ function setInstalledState(installedVersion, latestVersion) {
   if (!installButton || !snapStatusElement) return;
 
   // "Target" = what this page will request when you click Install
-  const targetVersion = snapVersion || latestVersion || null;
+  const isAdvanced = advancedOptionsToggle && advancedOptionsToggle.checked;
+  const versionFromInput = (isAdvanced && versionInput) ? versionInput.value.trim() : '';
+  const targetVersion = versionFromInput || snapVersion || latestVersion || null;
 
   let buttonLabel = 'Re-install Qtum Snap';
   let statusHtml = '';
@@ -95,17 +100,19 @@ function setInstalledState(installedVersion, latestVersion) {
         installButton.disabled = true;
       }
 
+      const versionLabel = isAdvanced ? 'specific version' : `latest <strong>${targetVersion}</strong>`;
       statusHtml =
         'Qtum Snap is installed on this wallet. ' +
-        `You are on the latest <strong>${targetVersion}</strong> package.`;
+        `You are on the ${versionLabel} package.`;
     } else {
       // Installed but not the target version
       buttonLabel = `Update Qtum Snap to ${targetVersion}`;
       installButton.disabled = false;
 
+      const versionLabel = isAdvanced ? 'specific version' : `latest <strong>${targetVersion}</strong>`;
       statusHtml =
         'Qtum Snap is installed on this wallet. ' +
-        `This page will upgrade you from <strong>${installedVersion}</strong> to the latest <strong>${targetVersion}</strong> package.`;
+        `This page will upgrade you from <strong>${installedVersion}</strong> to the ${versionLabel} package.`;
     }
   } else if (installedVersion) {
     // We don't know the target/latest version (npm request failed, etc.)
@@ -137,7 +144,9 @@ function setInstalledState(installedVersion, latestVersion) {
 function setNotInstalledState(latestVersion) {
   if (!installButton || !snapStatusElement) return;
 
-  const targetVersion = snapVersion || latestVersion || null;
+  const isAdvanced = advancedOptionsToggle && advancedOptionsToggle.checked;
+  const versionFromInput = (isAdvanced && versionInput) ? versionInput.value.trim() : '';
+  const targetVersion = versionFromInput || snapVersion || latestVersion || null;
 
   installButton.textContent = 'Install Qtum Snap';
   installButton.disabled = false;
@@ -146,9 +155,12 @@ function setNotInstalledState(latestVersion) {
     uninstallButton.disabled = true; // uninstall disabled when not installed
   }
 
-  snapStatusElement.innerHTML = targetVersion
-    ? `Qtum Snap is not installed yet on this wallet. This page will install the latest <strong>${targetVersion}</strong> package.`
-    : 'Qtum Snap is not installed yet on this wallet.';
+  if (targetVersion) {
+    const versionLabel = isAdvanced ? 'specific version' : `latest <strong>${targetVersion}</strong>`;
+    snapStatusElement.innerHTML = `Qtum Snap is not installed yet on this wallet. This page will install the ${versionLabel} package.`;
+  } else {
+    snapStatusElement.innerHTML = 'Qtum Snap is not installed yet on this wallet.';
+  }
 }
 
 async function detectEnvironmentAndSnap() {
@@ -204,18 +216,21 @@ async function installSnap() {
 
   try {
     // 1. Decide which version this page wants to install
-    let versionToRequest = snapVersion;
+    const isAdvanced = advancedOptionsToggle && advancedOptionsToggle.checked;
+    const versionFromInput = (isAdvanced && versionInput) ? versionInput.value.trim() : '';
+    let versionToRequest = versionFromInput || snapVersion;
 
-    // For npm (prod) we look up the latest version.
-    // For local (dev) we skip NPM entirely.
+    // For npm (prod) we look up the latest version if none specified.
     if (!versionToRequest && !isDevEnvironment) {
       const latestVersion = await getLatestSnapVersionFromNPM();
-      if (latestVersion) {
-        versionToRequest = latestVersion;
-      }
+      // If we still don't have a version, default to "*" (latest) for NPM snaps
+      versionToRequest = latestVersion || '*';
     }
 
-    const params = versionToRequest ? { version: versionToRequest } : {};
+    const params = {};
+    if (versionToRequest) {
+      params.version = versionToRequest;
+    }
 
     // 2. Check currently installed version (if any) to set button text
     let label = 'Installing Qtum Snap…';
@@ -276,6 +291,7 @@ async function installSnap() {
 function showUninstallInstructions() {
   alert(
     'How to uninstall Qtum Snap:\n\n' +
+      'IMPORTANT: Export your private keys first from the Snap dashboard if you need to keep access to your wallet/accounts.\n\n' +
       '1. Open MetaMask.\n' +
       '2. Click the menu (three dots) in the top-right corner and go to "Snaps".\n' +
       '3. Find "Qtum Snap" in the list.\n' +
@@ -385,6 +401,60 @@ function init() {
   }
   if (uninstallButton) {
     uninstallButton.addEventListener('click', showUninstallInstructions);
+  }
+
+  // Advanced options
+  if (advancedOptionsToggle && advancedOptionsContent) {
+    const switchWrapper = document.querySelector('.switch-wrapper');
+    if (switchWrapper) {
+      switchWrapper.addEventListener('click', (e) => {
+        // Only toggle if the click was directly on the wrapper background, 
+        // avoiding double-toggles from labels/inputs that handle it by default.
+        if (e.target.tagName !== 'INPUT' && !e.target.closest('label')) {
+          advancedOptionsToggle.checked = !advancedOptionsToggle.checked;
+          // Trigger change event manually
+          advancedOptionsToggle.dispatchEvent(new Event('change'));
+        }
+      });
+    }
+
+    // Initial sync
+    if (advancedOptionsToggle.checked) {
+      advancedOptionsContent.classList.add('expanded');
+      // Auto-fill version if empty on load
+      (async () => {
+        if (versionInput && !versionInput.value.trim()) {
+          const latest = await getLatestSnapVersionFromNPM();
+          if (latest) {
+            versionInput.value = latest;
+            detectEnvironmentAndSnap();
+          }
+        }
+      })();
+    }
+
+    advancedOptionsToggle.addEventListener('change', async (event) => {
+      if (event.currentTarget.checked) {
+        advancedOptionsContent.classList.add('expanded');
+        // Auto-fill version if empty
+        if (versionInput && !versionInput.value.trim()) {
+          const latest = await getLatestSnapVersionFromNPM();
+          if (latest) {
+            versionInput.value = latest;
+          }
+        }
+      } else {
+        advancedOptionsContent.classList.remove('expanded');
+      }
+      // Refresh status messages
+      detectEnvironmentAndSnap();
+    });
+
+    if (versionInput) {
+      versionInput.addEventListener('input', () => {
+        detectEnvironmentAndSnap();
+      });
+    }
   }
 
   // Carousel arrows
