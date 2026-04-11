@@ -322,27 +322,27 @@ function showUninstallInstructions() {
 
 const screenshots = [
   {
-    src: 'images/pngs/home.png',
+    src: 'images/screenshots/home.png',
     caption: 'Home · Snapshot of your Qtum wallet',
   },
   {
-    src: 'images/pngs/dashboard.png',
+    src: 'images/screenshots/dashboard.png',
     caption: 'Dashboard · View with QTUM and QRC20 balances',
   },
   {
-    src: 'images/pngs/receive.png',
+    src: 'images/screenshots/receive.png',
     caption: 'Receive · QR code with Qtum & Hexadecimal addresses',
   },
   {
-    src: 'images/pngs/add-qrc20.png',
+    src: 'images/screenshots/add-qrc20.png',
     caption: 'Tokens · Search and add a QRC20 contract',
   },
   {
-    src: 'images/pngs/send.png',
+    src: 'images/screenshots/send.png',
     caption: 'Send · Choose between native QTUM or QRC20',
   },
   {
-    src: 'images/pngs/sending.png',
+    src: 'images/screenshots/sending.png',
     caption: 'Sending · Transaction in progress and broadcasting',
   },
 ];
