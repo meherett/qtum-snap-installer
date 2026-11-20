@@ -33,6 +33,33 @@ const carouselPrevious = document.getElementById('carousel-previous');
 const carouselNext = document.getElementById('carousel-next');
 
 // =============================
+// Provider discovery (EIP-6963)
+// =============================
+
+// Other wallet extensions (Phantom, Coinbase, Rabby, ...) can hijack
+// window.ethereum, so we discover MetaMask explicitly via EIP-6963.
+const discoveredProviders = new Map();
+
+window.addEventListener('eip6963:announceProvider', (event) => {
+  const { info, provider } = event.detail || {};
+  if (info && provider) {
+    discoveredProviders.set(info.rdns, provider);
+  }
+});
+window.dispatchEvent(new Event('eip6963:requestProvider'));
+
+function getProvider() {
+  // Prefer Flask (full Snaps support), then stable MetaMask.
+  return (
+    discoveredProviders.get('io.metamask.flask') ||
+    discoveredProviders.get('io.metamask') ||
+    discoveredProviders.get('io.metamask.mmi') ||
+    window.ethereum ||
+    null
+  );
+}
+
+// =============================
 // Helpers for npm version lookup
 // =============================
 
@@ -168,7 +195,9 @@ async function detectEnvironmentAndSnap() {
 
   const switchWrapper = document.querySelector('.switch-wrapper');
 
-  if (!window.ethereum) {
+  const provider = getProvider();
+
+  if (!provider) {
     envElement.textContent =
       'No Ethereum provider detected. Install MetaMask and open this page in that browser profile.';
     installButton.disabled = true;
@@ -187,7 +216,7 @@ async function detectEnvironmentAndSnap() {
   }
 
   try {
-    const snaps = await window.ethereum.request({
+    const snaps = await provider.request({
       method: 'wallet_getSnaps',
     });
 
@@ -207,7 +236,9 @@ async function detectEnvironmentAndSnap() {
   } catch (e) {
     console.error(e);
     envElement.textContent =
-      'This MetaMask does not support Snaps yet. Please use latest MetaMask.';
+      'Could not reach MetaMask Snaps' +
+      (e && e.message ? ` (${e.message})` : '') +
+      '. Make sure MetaMask (or Flask) is up to date and is the only wallet extension enabled.';
     installButton.disabled = true;
     uninstallButton.disabled = true;
     if (advancedOptionsToggle) {
@@ -222,7 +253,8 @@ async function detectEnvironmentAndSnap() {
 // =============================
 
 async function installSnap() {
-  if (!window.ethereum) {
+  const provider = getProvider();
+  if (!provider) {
     alert('MetaMask is required to install Qtum Snap.');
     return;
   }
@@ -252,7 +284,7 @@ async function installSnap() {
     let label = 'Installing Qtum Snap…';
 
     try {
-      const snaps = await window.ethereum.request({
+      const snaps = await provider.request({
         method: 'wallet_getSnaps',
       });
       const existingSnap = snaps[snapID];
@@ -283,7 +315,7 @@ async function installSnap() {
     });
 
     // 3. Request installation/upgrade
-    await window.ethereum.request({
+    await provider.request({
       method: 'wallet_requestSnaps',
       params: {
         [snapID]: params,
